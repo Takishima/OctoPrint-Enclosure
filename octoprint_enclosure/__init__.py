@@ -778,7 +778,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             else:
                 sudo_str = ""
 
-            cmd = sudo_str + "python " + script + str(led_pin) + " " + str(led_count) + " " + str(
+            cmd = sudo_str + "python3 " + script + str(led_pin) + " " + str(led_count) + " " + str(
                 led_brightness) + " " + str(red) + " " + str(green) + " " + str(blue) + " "
 
             if neopixel_dirrect:
@@ -1091,7 +1091,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 sudo_str = "sudo "
             else:
                 sudo_str = ""
-            cmd = sudo_str + "python " + script + str(sensor) + " " + str(pin)
+            cmd = sudo_str + "python3 " + script + str(sensor) + " " + str(pin)
             if  self._settings.get(["debug_temperature_log"]) is True:
                 self._logger.debug("Temperature dht cmd: %s", cmd)
             stdout = (Popen(cmd, shell=True, stdout=PIPE).stdout).read()
@@ -1112,7 +1112,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 sudo_str = "sudo "
             else:
                 sudo_str = ""
-            cmd = sudo_str + "python " + script + str(address)
+            cmd = sudo_str + "python3 " + script + str(address)
             if  self._settings.get(["debug_temperature_log"]) is True:
                 self._logger.debug("Temperature BME280 cmd: %s", cmd)
             stdout = (Popen(cmd, shell=True, stdout=PIPE).stdout).read()
@@ -1133,7 +1133,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 sudo_str = "sudo "
             else:
                 sudo_str = ""
-            cmd = sudo_str + "python " + script # sensor has fixed address 0x5C
+            cmd = sudo_str + "python3 " + script # sensor has fixed address 0x5C
             if  self._settings.get(["debug_temperature_log"]) is True:
                 self._logger.debug("Temperature AM2320 cmd: %s", cmd)
             stdout = (Popen(cmd, shell=True, stdout=PIPE).stdout).read()
@@ -1154,7 +1154,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 sudo_str = "sudo "
             else:
                 sudo_str = ""
-            cmd = sudo_str + "python " + script + str(address) + " " + str(i2cbus)
+            cmd = sudo_str + "python3 " + script + str(address) + " " + str(i2cbus)
             if  self._settings.get(["debug_temperature_log"]) is True:
                 self._logger.debug("Temperature SI7021 cmd: %s", cmd)
             stdout = (Popen(cmd, shell=True, stdout=PIPE).stdout).read()
