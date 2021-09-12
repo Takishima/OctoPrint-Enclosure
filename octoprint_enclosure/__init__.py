@@ -709,7 +709,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             if active_low is None and state: return state
 
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
         if active_low and not state: return True
         if not active_low and state: return True
@@ -794,7 +794,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             if queue_id is not None:
                 self.stop_queue_item(queue_id)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def check_enclosure_temp(self):
         try:
@@ -813,7 +813,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     self.handle_pwm_linked_temperature()
                     self.update_ui()
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def toggle_output(self, output_index, first_run=False):
         for output in [item for item in self.rpi_outputs if item['index_id'] == output_index]:
@@ -952,7 +952,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                                                           rpi_output_neopixel=neopixel_status,
                                                           rpi_output_temp_hum_ctrl=temp_control_status))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def update_ui_inputs(self):
         try:
@@ -965,7 +965,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     sensor_status.append(dict(index_id=index, filament_sensor_enabled=value))
             self._plugin_manager.send_plugin_message(self._identifier, dict(filament_sensor_status=sensor_status))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def get_sensor_data(self, sensor):
         try:
@@ -1009,7 +1009,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 return temp, hum
             return None, None
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def handle_temperature_events(self):
         for temperature_alarm in [item for item in self.rpi_outputs if item['output_type'] == 'temperature_alarm']:
@@ -1081,7 +1081,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             return self.to_float(stdout.decode("utf-8").strip())
         except Exception as ex:
             self._logger.info("Failed to execute python scripts, try disabling use SUDO on advanced section.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return 0
 
     def read_dht_temp(self, sensor, pin):
@@ -1102,7 +1102,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
         except Exception as ex:
             self._logger.info(
                 "Failed to execute python scripts, try disabling use SUDO on advanced section of the plugin.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return (0, 0)
 
     def read_bme280_temp(self, address):
@@ -1123,7 +1123,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
         except Exception as ex:
             self._logger.info(
                 "Failed to execute python scripts, try disabling use SUDO on advanced section of the plugin.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return (0, 0)
 
     def read_am2320_temp(self):
@@ -1144,7 +1144,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
         except Exception as ex:
             self._logger.info(
                 "Failed to execute python scripts, try disabling use SUDO on advanced section of the plugin.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return (0, 0)
 
     def read_si7021_temp(self, address, i2cbus):
@@ -1165,7 +1165,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
         except Exception as ex:
             self._logger.info(
                 "Failed to execute python scripts, try disabling use SUDO on advanced section of the plugin.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return (0, 0)
 
     def read_18b20_temp(self, serial_number):
@@ -1207,7 +1207,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             return self.to_float(stdout.decode("utf-8").strip())
         except Exception as ex:
             self._logger.info("Failed to execute python scripts, try disabling use SUDO on advanced section.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return 0
 
     def read_max31855_temp(self, address):
@@ -1223,7 +1223,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             return self.to_float(stdout.decode("utf-8").strip())
         except Exception as ex:
             self._logger.info("Failed to execute python scripts, try disabling use SUDO on advanced section.")
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             return 0
 
     def handle_pwm_linked_temperature(self):
@@ -1259,7 +1259,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                 self.write_pwm(gpio_pin, self.constrain(calculated_duty, 0, 100))
 
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def get_linked_temp_sensor_data(self, linked_id):
         try:
@@ -1343,12 +1343,15 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                         if control_status['index_id'] == temp_hum_control['index_id']:
                             control_status['status'] = current_status
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
-    def log_error(self, ex):
+    def log_error(self, ex, tb):
         template = "An exception of type {0} occurred on {1}. Arguments:\n{2!r}"
         message = template.format(type(ex).__name__, inspect.currentframe().f_code.co_name, ex.args)
         self._logger.warn(message)
+
+        import traceback
+        self._logger.warn(''.join(traceback.format_tb(tb)))
 
     def setup_gpio(self):
         try:
@@ -1376,7 +1379,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     dict(is_msg=True, msg=warn_msg, msg_type="error"))
             GPIO.setwarnings(False)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def clear_gpio(self):
         try:
@@ -1397,14 +1400,14 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     pass
                 GPIO.cleanup(self.to_int(gpio_in['gpio_pin']))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def clear_channel(self, channel):
         try:
             GPIO.cleanup(self.to_int(channel))
             self._logger.debug("Clearing channel %s", channel)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def generate_temp_hum_control_status(self):
         status = []
@@ -1462,7 +1465,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     GPIO.add_event_detect(gpio_pin, edge, callback=self.handle_printer_action, bouncetime=200)
                     self._logger.info("Adding PRINTER CONTROL event detect on pin %s with edge: %s", gpio_pin, edge)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def handle_filamment_detection(self, channel):
         try:
@@ -1494,7 +1497,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     else:
                         self._logger.info("Prevented end of filament detection, filament sensor timeout not elapsed.")
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def start_filament_detection(self):
         self.stop_filament_detection()
@@ -1513,7 +1516,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     GPIO.add_event_detect(self.to_int(filament_sensor['gpio_pin']), edge,
                         callback=self.handle_filamment_detection, bouncetime=200)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def stop_filament_detection(self):
         try:
@@ -1523,7 +1526,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                         'printer_action'] == 'filament', self.rpi_inputs)):
                 GPIO.remove_event_detect(self.to_int(filament_sensor['gpio_pin']))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
 
     def cancel_all_events_on_queue(self):
         for task in self.event_queue:
@@ -1551,7 +1554,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                             val = GPIO.LOW if rpi_input['controlled_io_set_value'] == 'low' else GPIO.HIGH
                             self.write_gpio(self.to_int(rpi_output['gpio_pin']), val)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             pass
 
     def shell_command(self, command):
@@ -1560,7 +1563,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
             self._plugin_manager.send_plugin_message(self._identifier,
                 dict(is_msg=True, msg=stdout, msg_type="success"))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             self._plugin_manager.send_plugin_message(self._identifier,
                 dict(is_msg=True, msg="Could not execute shell script", msg_type="error"))
 
@@ -1602,7 +1605,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                         command = rpi_output['shell_script']
                         self.shell_command(command)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             pass
 
     def send_gcode_command(self, command):
@@ -1657,7 +1660,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                                 rpi_input['label'])
                             self.send_notification(msg)
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             pass
 
     def write_gpio(self, gpio, value, queue_id=None):
@@ -1693,7 +1696,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                         self.stop_queue_item(queue_id)
                     break
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             pass
 
     def get_output_list(self):
@@ -1731,7 +1734,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin, octoprint.plugin.TemplateP
                     for err in j['errors']:
                         self._logger.info('Error: {}'.format(err['message']))
         except Exception as ex:
-            self.log_error(ex)
+            self.log_error(ex, sys.exc_info()[2])
             pass
 
     def ifttt_notification(self, message, event, api_key):
