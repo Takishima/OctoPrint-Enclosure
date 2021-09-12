@@ -48,10 +48,11 @@ You need to install Adafruit library to use the temperature sensor on raspberry 
 Open raspberry pi terminal and type:
 
 <pre><code>cd ~
-git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-cd Adafruit_Python_DHT
+git clone https://github.com/adafruit/Adafruit_CircuitPython_DHT.git
+cd Adafruit_CircuitPython_DHT
 sudo apt-get update
 sudo apt-get install build-essential python-dev python-openssl
+sudo python -m pip install adafruit-blinka
 sudo python setup.py install</code></pre>
 
 Note: All libraries need to be installed on raspberry pi system python not octoprint virtual environment.
@@ -59,9 +60,9 @@ Note: All libraries need to be installed on raspberry pi system python not octop
 You can test the library by using:
 
 <pre><code>cd examples
-sudo ./AdafruitDHT.py 2302 4</code></pre>
+sudo ./dht_simpletest.py</code></pre>
 
-Note that the first argument is the temperature sensor (11, 22, or 2302), and the second argument is the GPIO  that the sensor was connected.
+Note that you may need to edit the file in order to specify the proper GPIO data pin that your sensor is connected to.
 
 * For the DS18B20 sensor:
 
